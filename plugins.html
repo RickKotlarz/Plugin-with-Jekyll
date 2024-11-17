@@ -1,0 +1,73 @@
+---
+layout: default
+title: Interactive Plugin Generator
+---
+
+<h1>{{ page.title }}</h1>
+
+<!-- Plugin Type Selection -->
+<div>
+  <label for="pluginType">Select Plugin Type:</label>
+  <select id="pluginType">
+    <option value="">--Choose Type--</option>
+    <option value="defender_kql">Defender KQL</option>
+    <option value="sentinel_kql">Sentinel KQL</option>
+    <option value="adx_kusto">ADX Kusto</option>
+  </select>
+</div>
+
+<!-- User Input Form -->
+<div id="inputForm" style="margin-top: 20px; display: none;">
+  <h2>Provide Plugin Details:</h2>
+  <label for="queryName">Query Name:</label>
+  <input type="text" id="queryName" placeholder="Enter query name">
+  <br><br>
+  <label for="queryDescription">Query Description:</label>
+  <textarea id="queryDescription" placeholder="Enter description"></textarea>
+</div>
+
+<!-- Dynamic Output -->
+<div id="output" style="margin-top: 30px;">
+  <h2>Generated Plugin:</h2>
+  <pre id="outputYaml"></pre>
+</div>
+
+<script>
+  document.getElementById('pluginType').addEventListener('change', function() {
+    const selectedType = this.value;
+    if (selectedType) {
+      document.getElementById('inputForm').style.display = 'block';
+      loadTemplate(selectedType);
+    } else {
+      document.getElementById('inputForm').style.display = 'none';
+    }
+  });
+
+  document.getElementById('queryName').addEventListener('input', updateOutput);
+  document.getElementById('queryDescription').addEventListener('input', updateOutput);
+
+  let templateData = {};
+
+  function loadTemplate(type) {
+    fetch(`/assets/data/${type}.yml`)
+      .then(response => response.text())
+      .then(yamlContent => {
+        templateData = jsyaml.load(yamlContent);
+        updateOutput();
+      });
+  }
+
+  function updateOutput() {
+    const name = document.getElementById('queryName').value;
+    const description = document.getElementById('queryDescription').value;
+
+    if (templateData.info) {
+      templateData.info.title = name || templateData.info.title;
+      templateData.info.description = description || templateData.info.description;
+    }
+
+    document.getElementById('outputYaml').innerText = jsyaml.dump(templateData);
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>

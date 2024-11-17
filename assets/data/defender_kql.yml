@@ -1,0 +1,16 @@
+openapi: "3.0.0"
+info:
+  title: Defender KQL Plugin
+  description: |
+    This is a template for Defender KQL-based plugins.
+paths:
+  /query:
+    get:
+      summary: Perform a KQL Query
+      parameters:
+        - name: query
+          in: query
+          required: true
+          description: The KQL query string.
+          schema:
+            type: string

@@ -1,0 +1,16 @@
+openapi: "3.0.0"
+info:
+  title: ADX Kusto Plugin
+  description: |
+    This is a template for ADX Kusto-based plugins.
+paths:
+  /analytics:
+    get:
+      summary: Run ADX Kusto Query
+      parameters:
+        - name: query
+          in: query
+          required: true
+          description: Kusto query string.
+          schema:
+            type: string

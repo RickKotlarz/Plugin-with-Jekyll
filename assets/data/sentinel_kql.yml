@@ -1,0 +1,19 @@
+openapi: "3.0.0"
+info:
+  title: Sentinel KQL Plugin
+  description: |
+    This is a template for Sentinel KQL-based plugins.
+paths:
+  /search:
+    post:
+      summary: Execute Sentinel Search
+      parameters:
+        - name: searchBody
+          in: body
+          required: true
+          description: Sentinel KQL search query.
+          schema:
+            type: object
+            properties:
+              query:
+                type: string
